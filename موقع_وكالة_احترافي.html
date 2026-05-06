@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;600;700&family=Cairo:wght@300;400;700;900&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --black:#0a0a0a;
+  --white:#f5f0e8;
+  --gold:#c8a96e;
+  --gold2:#e8c97e;
+  --dark:#111111;
+  --gray:#888;
+  --card:#161616;
+}
+html{scroll-behavior:smooth;}
+body{background:var(--black);color:var(--white);font-family:'Space Grotesk',sans-serif;overflow-x:hidden;cursor:none;}
+
+/* Custom cursor */
+.cursor{position:fixed;width:12px;height:12px;background:var(--gold);border-radius:50%;pointer-events:none;z-index:9999;transition:transform 0.15s ease;mix-blend-mode:difference;}
+.cursor-follower{position:fixed;width:40px;height:40px;border:1px solid var(--gold);border-radius:50%;pointer-events:none;z-index:9998;transition:all 0.3s ease;mix-blend-mode:difference;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.5rem 4rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(200,169,110,0.15);backdrop-filter:blur(20px);background:rgba(10,10,10,0.7);}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:4px;color:var(--gold);}
+.nav-links{display:flex;gap:2.5rem;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--white);font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;opacity:0.7;transition:all 0.3s;position:relative;}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:1px;background:var(--gold);transition:width 0.3s;}
+.nav-links a:hover{opacity:1;color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
+.nav-cta{background:var(--gold);color:var(--black);padding:0.6rem 1.5rem;font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:none;cursor:none;transition:all 0.3s;}
+.nav-cta:hover{background:var(--gold2);transform:translateY(-2px);}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;position:relative;padding:0 4rem;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%, rgba(200,169,110,0.08) 0%, transparent 60%),radial-gradient(ellipse at 10% 80%, rgba(200,169,110,0.04) 0%, transparent 50%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(200,169,110,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(200,169,110,0.04) 1px,transparent 1px);background-size:60px 60px;}
+.hero-number{position:absolute;right:4rem;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:20rem;color:rgba(200,169,110,0.04);line-height:1;pointer-events:none;user-select:none;}
+.hero-content{max-width:750px;position:relative;z-index:2;}
+.hero-tag{display:inline-flex;align-items:center;gap:0.5rem;border:1px solid rgba(200,169,110,0.4);padding:0.4rem 1rem;font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:2rem;animation:fadeUp 0.8s ease forwards;}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--gold);border-radius:50%;animation:pulse 2s infinite;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(4rem,9vw,8rem);line-height:0.95;letter-spacing:2px;margin-bottom:1.5rem;animation:fadeUp 0.8s 0.2s ease both;}
+.hero-title .line2{color:var(--gold);display:block;}
+.hero-title .line3{-webkit-text-stroke:1px var(--white);color:transparent;display:block;}
+.hero-subtitle{font-size:1rem;color:rgba(245,240,232,0.5);line-height:1.8;max-width:480px;margin-bottom:3rem;animation:fadeUp 0.8s 0.4s ease both;font-weight:300;}
+.hero-actions{display:flex;gap:1.5rem;align-items:center;animation:fadeUp 0.8s 0.6s ease both;}
+.btn-primary{background:var(--gold);color:var(--black);padding:1rem 2.5rem;font-weight:700;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;border:none;cursor:none;transition:all 0.3s;position:relative;overflow:hidden;}
+.btn-primary::before{content:'';position:absolute;inset:0;background:var(--gold2);transform:translateX(-100%);transition:transform 0.3s;}
+.btn-primary:hover::before{transform:translateX(0);}
+.btn-primary span{position:relative;z-index:1;}
+.btn-secondary{color:var(--white);font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;display:flex;align-items:center;gap:0.5rem;opacity:0.7;transition:all 0.3s;cursor:none;}
+.btn-secondary:hover{opacity:1;color:var(--gold);gap:1rem;}
+.hero-stats{position:absolute;right:4rem;bottom:4rem;display:flex;gap:3rem;}
+.stat{text-align:center;}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:3rem;color:var(--gold);line-height:1;}
+.stat-label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;opacity:0.5;margin-top:0.2rem;}
+.hero-scroll{position:absolute;left:4rem;bottom:4rem;display:flex;flex-direction:column;align-items:center;gap:0.5rem;opacity:0.4;}
+.scroll-line{width:1px;height:60px;background:linear-gradient(var(--gold),transparent);animation:scrollAnim 2s ease infinite;}
+.scroll-text{font-size:0.6rem;letter-spacing:3px;text-transform:uppercase;writing-mode:vertical-rl;}
+
+/* MARQUEE */
+.marquee-wrap{padding:1.5rem 0;border-top:1px solid rgba(200,169,110,0.15);border-bottom:1px solid rgba(200,169,110,0.15);overflow:hidden;background:rgba(200,169,110,0.03);}
+.marquee-track{display:flex;gap:3rem;white-space:nowrap;animation:marquee 20s linear infinite;}
+.marquee-item{font-family:'Bebas Neue',sans-serif;font-size:1.2rem;letter-spacing:4px;color:rgba(200,169,110,0.5);display:flex;align-items:center;gap:3rem;}
+.marquee-dot{width:6px;height:6px;background:var(--gold);border-radius:50%;opacity:0.5;}
+
+/* SERVICES */
+.section{padding:8rem 4rem;}
+.section-header{margin-bottom:5rem;}
+.section-num{font-family:'Bebas Neue',sans-serif;font-size:1rem;color:var(--gold);letter-spacing:4px;display:block;margin-bottom:0.5rem;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4.5rem);line-height:1;letter-spacing:2px;}
+.section-title .accent{color:var(--gold);}
+.section-desc{font-size:0.9rem;color:rgba(245,240,232,0.5);max-width:400px;line-height:1.8;margin-top:1rem;font-weight:300;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,0.15);}
+.service-card{background:var(--dark);padding:3rem 2.5rem;position:relative;overflow:hidden;transition:all 0.4s;cursor:none;}
+.service-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(200,169,110,0.06) 0%,transparent 60%);opacity:0;transition:opacity 0.4s;}
+.service-card:hover::before{opacity:1;}
+.service-card:hover{transform:translateY(-4px);}
+.service-icon{width:48px;height:48px;border:1px solid rgba(200,169,110,0.3);display:flex;align-items:center;justify-content:center;margin-bottom:2rem;font-size:1.3rem;transition:all 0.3s;}
+.service-card:hover .service-icon{border-color:var(--gold);background:rgba(200,169,110,0.1);}
+.service-name{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;margin-bottom:0.8rem;}
+.service-name-ar{font-family:'Cairo',sans-serif;font-size:1rem;color:var(--gold);margin-bottom:1rem;font-weight:700;}
+.service-desc{font-size:0.82rem;color:rgba(245,240,232,0.45);line-height:1.8;font-weight:300;}
+.service-price{margin-top:2rem;padding-top:1.5rem;border-top:1px solid rgba(200,169,110,0.15);font-family:'Bebas Neue',sans-serif;font-size:1.5rem;color:var(--gold);letter-spacing:2px;}
+.service-num{position:absolute;top:2rem;right:2rem;font-family:'Bebas Neue',sans-serif;font-size:3rem;color:rgba(200,169,110,0.06);line-height:1;}
+
+/* PORTFOLIO */
+.portfolio{padding:8rem 4rem;background:var(--dark);}
+.portfolio-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:4rem;}
+.portfolio-item{position:relative;overflow:hidden;aspect-ratio:4/3;background:var(--card);cursor:none;}
+.portfolio-item:first-child{grid-row:span 2;aspect-ratio:auto;}
+.portfolio-thumb{width:100%;height:100%;object-fit:cover;display:flex;align-items:center;justify-content:center;}
+.portfolio-placeholder{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:1rem;min-height:250px;}
+.portfolio-icon{font-size:3rem;opacity:0.15;}
+.portfolio-label{font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;opacity:0.2;}
+.portfolio-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(10,10,10,0.95) 0%,rgba(10,10,10,0.4) 50%,transparent 100%);opacity:0;transition:opacity 0.4s;display:flex;align-items:flex-end;padding:2rem;}
+.portfolio-item:hover .portfolio-overlay{opacity:1;}
+.portfolio-info{}
+.portfolio-cat{font-size:0.65rem;letter-spacing:3px;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:0.3rem;}
+.portfolio-title{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:2px;}
+
+/* PACKAGES */
+.packages{padding:8rem 4rem;}
+.packages-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(200,169,110,0.15);margin-top:4rem;}
+.pkg{background:var(--dark);padding:3rem 2.5rem;position:relative;transition:all 0.4s;cursor:none;}
+.pkg.featured{background:#0f0f0f;border:1px solid var(--gold);}
+.pkg-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--black);font-size:0.6rem;font-weight:700;letter-spacing:2px;padding:0.3rem 1rem;text-transform:uppercase;white-space:nowrap;}
+.pkg-name{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:3px;margin-bottom:0.3rem;}
+.pkg-name-ar{font-family:'Cairo',sans-serif;font-size:0.85rem;color:var(--gold);margin-bottom:2rem;opacity:0.8;}
+.pkg-price{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;color:var(--gold);line-height:1;}
+.pkg-per{font-size:0.75rem;letter-spacing:2px;color:rgba(245,240,232,0.4);text-transform:uppercase;margin-bottom:2rem;}
+.pkg-divider{height:1px;background:rgba(200,169,110,0.15);margin:1.5rem 0;}
+.pkg-features{list-style:none;display:flex;flex-direction:column;gap:0.8rem;margin-bottom:2rem;}
+.pkg-features li{font-size:0.8rem;color:rgba(245,240,232,0.6);display:flex;gap:0.8rem;align-items:flex-start;}
+.pkg-features li::before{content:'▸';color:var(--gold);flex-shrink:0;font-size:0.7rem;margin-top:2px;}
+.pkg-btn{width:100%;padding:0.9rem;font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;border:1px solid var(--gold);background:transparent;color:var(--gold);cursor:none;transition:all 0.3s;}
+.pkg-btn:hover,.pkg.featured .pkg-btn{background:var(--gold);color:var(--black);}
+
+/* CONTACT */
+.contact{padding:8rem 4rem;background:var(--dark);position:relative;overflow:hidden;}
+.contact-bg{position:absolute;right:-200px;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:25rem;color:rgba(200,169,110,0.03);line-height:1;pointer-events:none;user-select:none;}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;}
+.contact-info{}
+.contact-tagline{font-family:'Bebas Neue',sans-serif;font-size:clamp(2.5rem,5vw,4rem);line-height:1;letter-spacing:2px;margin-bottom:2rem;}
+.contact-tagline .gold{color:var(--gold);}
+.contact-items{display:flex;flex-direction:column;gap:1.5rem;margin-top:3rem;}
+.contact-item{display:flex;gap:1rem;align-items:flex-start;}
+.contact-icon{width:36px;height:36px;border:1px solid rgba(200,169,110,0.3);display:flex;align-items:center;justify-content:center;font-size:0.9rem;flex-shrink:0;color:var(--gold);}
+.contact-item-text{}
+.contact-item-label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;opacity:0.4;display:block;margin-bottom:0.2rem;}
+.contact-item-val{font-size:0.9rem;}
+.contact-form{display:flex;flex-direction:column;gap:1rem;}
+.form-group{display:flex;flex-direction:column;gap:0.4rem;}
+.form-label{font-size:0.65rem;letter-spacing:2px;text-transform:uppercase;opacity:0.5;}
+.form-input,.form-textarea{background:rgba(200,169,110,0.04);border:1px solid rgba(200,169,110,0.2);color:var(--white);padding:0.9rem 1rem;font-family:'Space Grotesk',sans-serif;font-size:0.85rem;transition:border-color 0.3s;outline:none;resize:none;}
+.form-input:focus,.form-textarea:focus{border-color:var(--gold);}
+.form-textarea{min-height:120px;}
+.form-submit{background:var(--gold);color:var(--black);padding:1rem;font-weight:700;font-size:0.8rem;letter-spacing:2px;text-transform:uppercase;border:none;cursor:none;transition:all 0.3s;margin-top:0.5rem;}
+.form-submit:hover{background:var(--gold2);}
+
+/* FOOTER */
+footer{padding:2rem 4rem;border-top:1px solid rgba(200,169,110,0.15);display:flex;justify-content:space-between;align-items:center;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:4px;color:var(--gold);}
+.footer-copy{font-size:0.7rem;letter-spacing:2px;opacity:0.3;text-transform:uppercase;}
+.footer-socials{display:flex;gap:1rem;}
+.social-link{width:32px;height:32px;border:1px solid rgba(200,169,110,0.2);display:flex;align-items:center;justify-content:center;font-size:0.75rem;color:var(--gold);text-decoration:none;transition:all 0.3s;cursor:none;}
+.social-link:hover{background:var(--gold);color:var(--black);}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+@keyframes scrollAnim{0%{transform:scaleY(0);transform-origin:top;}50%{transform:scaleY(1);transform-origin:top;}51%{transform:scaleY(1);transform-origin:bottom;}100%{transform:scaleY(0);transform-origin:bottom;}}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}</style>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-follower" id="follower"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">VIZION</div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#portfolio">Portfolio</a></li>
+    <li><a href="#packages">Tarifs</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="nav-cta">Démarrer →</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-number">10</div>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span></span>
+      Agence Digitale · تونس
+    </div>
+    <h1 class="hero-title">
+      VOTRE MARQUE
+      <span class="line2">بقوّة</span>
+      <span class="line3">DIFFÉRENTE</span>
+    </h1>
+    <p class="hero-subtitle">
+      نحوّل علامتك التجارية إلى تجربة بصرية لا تُنسى — إنتاج، تصوير، محتوى وإعلانات رقمية احترافية منذ 2015.
+    </p>
+    <div class="hero-actions">
+      <button class="btn-primary"><span>Voir nos travaux →</span></button>
+      <span class="btn-secondary">Nos services ↓</span>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Années</div></div>
+    <div class="stat"><div class="stat-num">80+</div><div class="stat-label">Clients</div></div>
+    <div class="stat"><div class="stat-num">300+</div><div class="stat-label">Projets</div></div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-text">Scroll</span>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <div class="marquee-item">Production Vidéo <span class="marquee-dot"></span></div>
+    <div class="marquee-item">إنتاج إعلانات <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Social Media <span class="marquee-dot"></span></div>
+    <div class="marquee-item">تصوير احترافي <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Montage & Motion <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Meta Ads <span class="marquee-dot"></span></div>
+    <div class="marquee-item">إدارة المحتوى <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Stratégie Digitale <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Production Vidéo <span class="marquee-dot"></span></div>
+    <div class="marquee-item">إنتاج إعلانات <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Social Media <span class="marquee-dot"></span></div>
+    <div class="marquee-item">تصوير احترافي <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Montage & Motion <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Meta Ads <span class="marquee-dot"></span></div>
+    <div class="marquee-item">إدارة المحتوى <span class="marquee-dot"></span></div>
+    <div class="marquee-item">Stratégie Digitale <span class="marquee-dot"></span></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="section-header">
+    <span class="section-num">01 — NOS SERVICES</span>
+    <h2 class="section-title">CE QU'ON <span class="accent">FAIT</span><br>POUR VOUS</h2>
+    <p class="section-desc">من الفكرة إلى الإنتاج — كل ما تحتاجه لعلامتك التجارية في مكان واحد.</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <div class="service-icon">🎬</div>
+      <div class="service-name">PRODUCTION</div>
+      <div class="service-name-ar">إنتاج الفيديو الإعلاني</div>
+      <p class="service-desc">Clips publicitaires, corporate videos, reels — production complète du scénario au montage final.</p>
+      <div class="service-price">DÈS 1.500 DT</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <div class="service-icon">📸</div>
+      <div class="service-name">SHOOTING</div>
+      <div class="service-name-ar">جلسات التصوير الاحترافي</div>
+      <p class="service-desc">Séances photo produits, corporate, événements — visuels haute qualité pour tous vos supports.</p>
+      <div class="service-price">DÈS 800 DT</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <div class="service-icon">📱</div>
+      <div class="service-name">SOCIAL MEDIA</div>
+      <div class="service-name-ar">إدارة السوشيال ميديا</div>
+      <p class="service-desc">Stratégie, création de contenu, community management et reporting mensuel détaillé.</p>
+      <div class="service-price">DÈS 1.200 DT/MOIS</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <div class="service-icon">🎯</div>
+      <div class="service-name">META ADS</div>
+      <div class="service-name-ar">الإعلانات المدفوعة</div>
+      <p class="service-desc">Campagnes Facebook & Instagram optimisées pour maximiser votre ROI et attirer vos clients cibles.</p>
+      <div class="service-price">DÈS 700 DT</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <div class="service-icon">✂️</div>
+      <div class="service-name">MONTAGE</div>
+      <div class="service-name-ar">المونتاج الاحترافي</div>
+      <p class="service-desc">Montage vidéo professionnel, motion design, habillage sonore et effets visuels premium.</p>
+      <div class="service-price">DÈS 300 DT</div>
+    </div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <div class="service-icon">💡</div>
+      <div class="service-name">STRATÉGIE</div>
+      <div class="service-name-ar">الاستراتيجية الرقمية</div>
+      <p class="service-desc">Audit de marque, positionnement digital, plan de contenu et accompagnement personnalisé.</p>
+      <div class="service-price">SUR DEVIS</div>
+    </div>
+  </div>
+</section>
+
+<!-- PORTFOLIO -->
+<section class="portfolio" id="portfolio">
+  <div class="section-header">
+    <span class="section-num">02 — PORTFOLIO</span>
+    <h2 class="section-title">NOS <span class="accent">RÉALISATIONS</span></h2>
+    <p class="section-desc">+300 projets réalisés pour des marques tunisiennes et internationales depuis 2015.</p>
+  </div>
+  <div class="portfolio-grid">
+    <div class="portfolio-item">
+      <div class="portfolio-placeholder" style="background:linear-gradient(135deg,#1a1a1a,#0f0f0f);min-height:500px;">
+        <div class="portfolio-icon">🎬</div>
+        <div class="portfolio-label">Votre meilleur projet ici</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <span class="portfolio-cat">Production Vidéo · إعلان تجاري</span>
+          <div class="portfolio-title">CAMPAGNE BRAND 2024</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-placeholder" style="background:linear-gradient(135deg,#161616,#111);">
+        <div class="portfolio-icon">📸</div>
+        <div class="portfolio-label">Shooting produits</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <span class="portfolio-cat">Shooting · تصوير</span>
+          <div class="portfolio-title">LOOKBOOK FASHION</div>
+        </div>
+      </div>
+    </div>
+    <div class="portfolio-item">
+      <div class="portfolio-placeholder" style="background:linear-gradient(135deg,#141414,#0d0d0d);">
+        <div class="portfolio-icon">📱</div>
+        <div class="portfolio-label">Social media content</div>
+      </div>
+      <div class="portfolio-overlay">
+        <div class="portfolio-info">
+          <span class="portfolio-cat">Social Media · محتوى</span>
+          <div class="portfolio-title">RESTAURANT REBRANDING</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <div class="section-header">
+    <span class="section-num">03 — TARIFS</span>
+    <h2 class="section-title">NOS <span class="accent">PACKAGES</span></h2>
+    <p class="section-desc">باقات شهرية ثابتة — اختر ما يناسب علامتك التجارية.</p>
+  </div>
+  <div class="packages-grid">
+    <div class="pkg">
+      <div class="pkg-name">STARTER</div>
+      <div class="pkg-name-ar">الباقة الأساسية</div>
+      <div class="pkg-price">1.200</div>
+      <div class="pkg-per">DT / Mois · شهر</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>8 publications conçues</li>
+        <li>4 vidéos Reels / TikTok</li>
+        <li>Rédaction des captions</li>
+        <li>Calendrier éditorial</li>
+        <li>Rapport mensuel</li>
+        <li>1 plateforme</li>
+      </ul>
+      <button class="pkg-btn">Choisir ce pack</button>
+    </div>
+    <div class="pkg featured">
+      <div class="pkg-badge">⭐ Le plus populaire</div>
+      <div class="pkg-name">PRO</div>
+      <div class="pkg-name-ar">الباقة الاحترافية</div>
+      <div class="pkg-price">2.200</div>
+      <div class="pkg-per">DT / Mois · شهر</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>16 publications + Stories</li>
+        <li>8 vidéos Reels professionnels</li>
+        <li>Stratégie contenu mensuelle</li>
+        <li>Community management</li>
+        <li>1 campagne Meta Ads</li>
+        <li>Rapport KPIs détaillé</li>
+        <li>2 plateformes</li>
+      </ul>
+      <button class="pkg-btn">Choisir ce pack</button>
+    </div>
+    <div class="pkg">
+      <div class="pkg-name">PREMIUM</div>
+      <div class="pkg-name-ar">الباقة المتكاملة</div>
+      <div class="pkg-price">3.500</div>
+      <div class="pkg-per">DT / Mois · شهر</div>
+      <div class="pkg-divider"></div>
+      <ul class="pkg-features">
+        <li>Contenu illimité</li>
+        <li>Shooting terrain mensuel</li>
+        <li>Vidéo publicitaire/mois</li>
+        <li>Ads Meta + Google gérés</li>
+        <li>Réunion stratégique mensuelle</li>
+        <li>Priorité 24h</li>
+        <li>Toutes les plateformes</li>
+      </ul>
+      <button class="pkg-btn">Choisir ce pack</button>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-bg">CONTACT</div>
+  <div class="contact-grid">
+    <div class="contact-info">
+      <span class="section-num">04 — CONTACT</span>
+      <h2 class="contact-tagline">PRÊT À <span class="gold">DÉMARRER</span><br>ENSEMBLE?</h2>
+      <p style="font-size:0.9rem;color:rgba(245,240,232,0.4);line-height:1.8;font-weight:300;max-width:380px;margin-top:1rem;">تواصل معنا اليوم ونبدأ نبني علامتك التجارية معاً. أول استشارة مجانية.</p>
+      <div class="contact-items">
+        <div class="contact-item">
+          <div class="contact-icon">📱</div>
+          <div class="contact-item-text">
+            <span class="contact-item-label">Téléphone / WhatsApp</span>
+            <span class="contact-item-val">+216 XX XXX XXX</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">✉️</div>
+          <div class="contact-item-text">
+            <span class="contact-item-label">Email</span>
+            <span class="contact-item-val">contact@vizion.tn</span>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="contact-icon">📍</div>
+          <div class="contact-item-text">
+            <span class="contact-item-label">Localisation</span>
+            <span class="contact-item-val">Tunis, Tunisie</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div>
+      <div class="contact-form">
+        <div class="form-group">
+          <label class="form-label">Votre nom / اسمك</label>
+          <input class="form-input" type="text" placeholder="ex: Ahmed Ben Ali">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" placeholder="email@exemple.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Service souhaité / الخدمة</label>
+          <input class="form-input" type="text" placeholder="ex: Pakage Pro, Shooting...">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Message</label>
+          <textarea class="form-textarea" placeholder="Décrivez votre projet... اوصف مشروعك..."></textarea>
+        </div>
+        <button class="form-submit">Envoyer le message →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">VIZION</div>
+  <div class="footer-copy">© 2025 Vizion Agency · Tous droits réservés</div>
+  <div class="footer-socials">
+    <a class="social-link" href="#">in</a>
+    <a class="social-link" href="#">ig</a>
+    <a class="social-link" href="#">fb</a>
+    <a class="social-link" href="#">yt</a>
+  </div>
+</footer>
+
+<script>
+const cursor = document.getElementById('cursor');
+const follower = document.getElementById('follower');
+let mx=0,my=0,fx=0,fy=0;
+document.addEventListener('mousemove',e=>{
+  mx=e.clientX;my=e.clientY;
+  cursor.style.left=(mx-6)+'px';
+  cursor.style.top=(my-6)+'px';
+});
+function animFollower(){
+  fx+=(mx-fx-20)*0.12;
+  fy+=(my-fy-20)*0.12;
+  follower.style.left=fx+'px';
+  follower.style.top=fy+'px';
+  requestAnimationFrame(animFollower);
+}
+animFollower();
+document.querySelectorAll('button,.service-card,.pkg,.portfolio-item,.social-link').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2)';follower.style.transform='scale(1.5)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';follower.style.transform='scale(1)';});
+});
+// Scroll reveal
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.style.opacity='1';e.target.style.transform='translateY(0)';}
+  });
+},{threshold:0.1});
+document.querySelectorAll('.service-card,.pkg,.portfolio-item,.contact-item').forEach((el,i)=>{
+  el.style.opacity='0';el.style.transform='translateY(40px)';el.style.transition=`all 0.6s ${i*0.1}s ease`;
+  observer.observe(el);
+});
+</script>
